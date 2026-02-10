@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Now Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-icons/1.0.0/css/font-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Custom Scrollbar for the dark theme */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569; 
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0B131E; /* Deep dark blue from image */
+        }
+    </style>
+</head>
+<body class="text-white min-h-screen p-8 flex justify-center items-center">
+
+    <div class="max-w-7xl w-full bg-[#0B131E] rounded-3xl overflow-hidden">
+        
+        <header class="flex justify-between items-center mb-8">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-sun text-orange-400 text-2xl"></i>
+                <h1 class="text-xl font-bold">Weather Now</h1>
+            </div>
+            <button id="unit-toggle" class="bg-[#202B3B] px-4 py-2 rounded-full text-sm hover:bg-[#2d3b4e] transition">
+                <i class="fa-solid fa-gear mr-2"></i> Units
+            </button>
+        </header>
+
+        <div class="text-center mb-10">
+            <h2 class="text-3xl font-semibold mb-4">How's the sky looking today?</h2>
+            <div class="max-w-md mx-auto relative flex items-center bg-[#202B3B] rounded-full px-2 py-2">
+                <i class="fa-solid fa-magnifying-glass text-gray-400 ml-3"></i>
+                <input 
+                    type="text" 
+                    id="city-input"
+                    placeholder="Search for a place..." 
+                    class="bg-transparent border-none outline-none text-white flex-grow px-4 placeholder-gray-400"
+                >
+                <button 
+                    id="search-btn"
+                    class="bg-[#4D7CFE] hover:bg-[#3b66d6] text-white px-6 py-2 rounded-full transition font-medium"
+                >
+                    Search
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <div class="lg:col-span-2 space-y-6">
+                
+                <div class="relative bg-gradient-to-r from-[#4D7CFE] to-[#8E44AD] rounded-[2rem] p-8 flex justify-between items-center overflow-hidden shadow-lg">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full -mr-10 -mt-10 blur-xl"></div>
+                    
+                    <div class="z-10">
+                        <h2 id="city-name" class="text-2xl font-bold">Berlin, Germany</h2>
+                        <p id="current-date" class="text-sm text-blue-100 mt-1">Tuesday, Aug 5, 2025</p>
+                        <div class="mt-8">
+                            <i id="weather-icon-main" class="fa-solid fa-sun text-yellow-300 text-6xl"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="z-10 text-right">
+                        <div class="text-7xl font-bold relative">
+                            <span id="current-temp">20</span><span class="text-4xl align-top">°</span>
+                        </div>
+                        <p id="weather-desc" class="text-lg capitalize mt-2">Sunny</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="bg-[#202B3B] p-4 rounded-2xl flex flex-col justify-between h-28">
+                        <p class="text-gray-400 text-sm">Feels Like</p>
+                        <p class="text-2xl font-semibold"><span id="feels-like">18</span>°</p>
+                    </div>
+                    <div class="bg-[#202B3B] p-4 rounded-2xl flex flex-col justify-between h-28">
+                        <p class="text-gray-400 text-sm">Humidity</p>
+                        <p class="text-2xl font-semibold"><span id="humidity">46</span>%</p>
+                    </div>
+                    <div class="bg-[#202B3B] p-4 rounded-2xl flex flex-col justify-between h-28">
+                        <p class="text-gray-400 text-sm">Wind</p>
+                        <p class="text-2xl font-semibold"><span id="wind-speed">14</span> km/h</p>
+                    </div>
+                    <div class="bg-[#202B3B] p-4 rounded-2xl flex flex-col justify-between h-28">
+                        <p class="text-gray-400 text-sm">Pressure</p>
+                        <p class="text-2xl font-semibold"><span id="pressure">1014</span> hPa</p>
+                    </div>
+                </div>
+
+                <div>
+                    <h3 class="text-gray-400 mb-4 text-sm font-medium uppercase tracking-wider">Daily Forecast</h3>
+                    <div id="daily-forecast-container" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+                        <div class="bg-[#202B3B] p-3 rounded-xl text-center hover:bg-[#2d3b4e] transition">
+                            <p class="text-gray-400 text-xs mb-2">Tue</p>
+                            <i class="fa-solid fa-cloud-rain text-blue-400 text-xl mb-2"></i>
+                            <p class="text-sm font-bold">20°</p>
+                        </div>
+                        <div class="bg-[#202B3B] p-3 rounded-xl text-center">
+                            <p class="text-gray-400 text-xs mb-2">Wed</p>
+                            <i class="fa-solid fa-cloud text-gray-400 text-xl mb-2"></i>
+                            <p class="text-sm font-bold">22°</p>
+                        </div>
+                        <div class="bg-[#202B3B] p-3 rounded-xl text-center">
+                            <p class="text-gray-400 text-xs mb-2">Thu</p>
+                            <i class="fa-solid fa-sun text-yellow-400 text-xl mb-2"></i>
+                            <p class="text-sm font-bold">25°</p>
+                        </div>
+                         </div>
+                </div>
+            </div>
+
+            <div class="bg-[#202B3B] rounded-3xl p-6 h-full">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-semibold text-lg">Hourly Forecast</h3>
+                    <span class="text-sm text-gray-400" id="hourly-container-day">Tuesday <i class="fa-solid fa-chevron-down text-xs ml-1"></i></span>
+                </div>
+
+                <div id="hourly-container" class="space-y-4 overflow-y-auto max-h-[500px] pr-2 custom-scrollbar">
+                    
+                    <div class="flex justify-between items-center p-3 hover:bg-[#2d3b4e] rounded-xl transition cursor-pointer">
+                        <div class="flex items-center gap-4">
+                            <i class="fa-solid fa-cloud text-gray-300"></i>
+                            <span class="text-sm font-medium">3 PM</span>
+                        </div>
+                        <span class="font-bold">20°</span>
+                    </div>
+
+                    <div class="flex justify-between items-center p-3 hover:bg-[#2d3b4e] rounded-xl transition cursor-pointer">
+                        <div class="flex items-center gap-4">
+                            <i class="fa-solid fa-cloud-sun text-yellow-200"></i>
+                            <span class="text-sm font-medium">4 PM</span>
+                        </div>
+                        <span class="font-bold">20°</span>
+                    </div>
+
+                    <div class="flex justify-between items-center p-3 hover:bg-[#2d3b4e] rounded-xl transition cursor-pointer bg-[#2d3b4e] border-l-4 border-[#4D7CFE]">
+                        <div class="flex items-center gap-4">
+                            <i class="fa-solid fa-sun text-yellow-400"></i>
+                            <span class="text-sm font-medium">5 PM</span>
+                        </div>
+                        <span class="font-bold">20°</span>
+                    </div>
+
+                    <div class="flex justify-between items-center p-3 hover:bg-[#2d3b4e] rounded-xl transition cursor-pointer">
+                        <div class="flex items-center gap-4">
+                            <i class="fa-solid fa-cloud text-gray-400"></i>
+                            <span class="text-sm font-medium">6 PM</span>
+                        </div>
+                        <span class="font-bold">19°</span>
+                    </div>
+                    
+                    <div class="flex justify-between items-center p-3 hover:bg-[#2d3b4e] rounded-xl transition cursor-pointer">
+                        <div class="flex items-center gap-4">
+                            <i class="fa-solid fa-moon text-purple-200"></i>
+                            <span class="text-sm font-medium">7 PM</span>
+                        </div>
+                        <span class="font-bold">18°</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const input = document.getElementById('city-input');
+            const btn = document.getElementById('search-btn');
+            
+            // Set default city and trigger click
+            if(input && btn) {
+                input.value = "New Delhi";
+                btn.click();
+            }
+        });
+    </script>
+</body>
+</html>
